@@ -103,19 +103,23 @@ io.on('connection' , (socket) => {
     
     socket.on('joinRoom' , (roomId) => {
         if (rooms[roomId]){
-            rooms[roomId].push(socket.id);
+            const present = rooms[roomId].filter(id => id === socket.id);
+            if (!present){
+                rooms[roomId].push(socket.id);
+            }
         }
         else{
             rooms[roomId] = [socket.id];
         }
         socketToRoom[socket.id] = roomId;
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
+
         socket.emit("allUsers" , restUsers);
     })
 
     socket.on('sendingSignal' , (payload) => {
-        const {targetID , callerID , signal} = payload;
-        io.to(targetID).emit('userJoined' , {signal , callerID});
+        const {userToSignal , callerID , signal} = payload;
+        io.to(userToSignal).emit('userJoined' , {signal , callerID});
     })
 
     socket.on('returningSignal' , (payload) => {
