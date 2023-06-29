@@ -6,12 +6,9 @@ const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const cors = require('cors');
+const http = require('http');
+const socket = require('socket.io');
 
-const io = require('socket.io')(8000 , {
-    cors :{
-        origin: '*'
-    }
-})
 
 const app = express();
 dotenv.config();
@@ -48,6 +45,20 @@ app.use((err,req,res,next)=>{
     })
 })
 
+
+const port = process.env.PORT || 8800;
+
+const server = app.listen(port, ()=>{
+    connect();
+    console.log(`server running on port : ${port}`);
+})
+
+// const io = require('socket.io')(8000 , {
+//     cors :{
+//         origin: '*'
+//     }
+// })
+let io = socket(server);
 
 //socket logics
 let activeUsers = [];
@@ -90,9 +101,3 @@ io.on('connection' , (socket) => {
     })
 })
 
-const port = process.env.PORT || 8800;
-
-app.listen(port, ()=>{
-    connect();
-    console.log("server running on port 8800");
-})
