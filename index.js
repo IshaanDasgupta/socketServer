@@ -7,8 +7,6 @@ const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const cors = require('cors');
 const http = require('http');
-const socket = require('socket.io');
-
 
 const app = express();
 dotenv.config();
@@ -53,14 +51,16 @@ const server = app.listen(port, ()=>{
     console.log(`server running on port : ${port}`);
 })
 
-// const io = require('socket.io')(8000 , {
-//     cors :{
-//         origin: '*'
-//     }
-// })
-let io = socket(server);
+
 
 //socket logics
+
+const io = require('socket.io')(server , {
+    cors :{
+        origin: '*'
+    }
+});
+
 let activeUsers = [];
 
 io.on('connection' , (socket) => {    
