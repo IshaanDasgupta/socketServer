@@ -62,6 +62,8 @@ const io = require('socket.io')(server , {
 });
 
 let activeUsers = [];
+const rooms = {};
+const socketToRoom = {};
 
 io.on('connection' , (socket) => {    
     socket.on('addUser' , (userId) => {
@@ -91,13 +93,34 @@ io.on('connection' , (socket) => {
 
     socket.on('disconnect' , () => {
         activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+        const roomID = socketToRoom[socket.id];
+        let room = rooms[roomID];
+        if (room){
+            room = room.filter((id) => id !== socket.id);
+            rooms[roomID] = room;
+        }
     })
     
-    socket.on('joinRoom' , (details) => {
-        console.log(details);
-        const {userId , roomId} = details;
-        socket.join(roomId);
-        socket.to(roomId).emit('userAddedToRoom' , userId);
+    socket.on('joinRoom' , (roomId) => {
+        if (rooms[roomId]){
+            rooms[roomId].push(socket.id);
+        }
+        else{
+            rooms[roomId] = [socket.id];
+        }
+        socketToRoom[socket.id] = roomId;
+        const restUsers = rooms[roomId].filter((id) => id !== socket.id);
+        socket.emit("allUsers" , restUsers);
+    })
+
+    socket.on('sendingSignal' , (payload) => {
+        const {targetID , callerID , signal} = payload;
+        io.to(targetID).emit('userJoined' , {signal , callerID});
+    })
+
+    socket.on('returningSignal' , (payload) => {
+        const {signal , callerID} = payload;
+        io.to(callerID).emit('recivingReturnedSignal' , {signal , id:socket.id});
     })
 })
 
