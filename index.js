@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const cors = require('cors');
 
 const io = require('socket.io')(8000 , {
     cors :{
