@@ -103,28 +103,33 @@ io.on('connection' , (socket) => {
     
     socket.on('joinRoom' , (roomId) => {
         if (rooms[roomId]){
-            const present = rooms[roomId].filter(id => id === socket.id);
-            if (!present){
-                rooms[roomId].push(socket.id);
-            }
+            // const present = rooms[roomId].filter(id => id === socket.id);
+            // if (!present){
+            //     rooms[roomId].push(socket.id);
+            // }
+            rooms[roomId].push(socket.id);
         }
         else{
             rooms[roomId] = [socket.id];
         }
         socketToRoom[socket.id] = roomId;
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
-
-        socket.emit("allUsers" , restUsers);
+        if (restUsers){
+            socket.emit("allUsers" , restUsers);
+            socket.to(restUsers).emit("userJoined" , socket.id);        
+        }
     })
 
-    socket.on('sendingSignal' , (payload) => {
-        const {userToSignal , callerID , signal} = payload;
-        io.to(userToSignal).emit('userJoined' , {signal , callerID});
+    socket.on('offer' ,  payload => {
+        io.to(payload.target).emit('userJoined' , payload);
     })
 
-    socket.on('returningSignal' , (payload) => {
-        const {signal , callerID} = payload;
-        io.to(callerID).emit('recivingReturnedSignal' , {signal , id:socket.id});
+    socket.on('answer' , payload => {
+        io.to(payload.target).emit('answer' , payload);
+    })
+
+    socket.on("ice-candidate" , incoming => {
+        io.to(incoming.target).emit('ice-candidate' , incoming.candidate);
     })
 })
 
