@@ -94,7 +94,8 @@ io.on('connection' , (socket) => {
     socket.on('disconnect' , () => {
         activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
         const roomID = socketToRoom[socket.id];
-        console.log("before " ,rooms[roomID]);
+        console.log("dcing " , socket.id);
+        console.log("before dc room " ,rooms[roomID]);
         let room = rooms[roomID];
         if (room){
             console.log("room before filter " , room);
@@ -102,7 +103,8 @@ io.on('connection' , (socket) => {
             console.log("room after filter " , room);
             rooms[roomID] = room;
         }
-        console.log("after " ,rooms[roomID]);
+        console.log("after dc room " ,rooms[roomID]);
+        console.log("--------------------------------------------");
     })
     
     socket.on('joinRoom' , (roomId) => {
@@ -118,6 +120,7 @@ io.on('connection' , (socket) => {
         socketToRoom[socket.id] = roomId;
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
         console.log("rest users ", restUsers);
+        console.log("--------------------------------------------");
         if (restUsers){
             socket.emit("allUsers" , restUsers);
             socket.to(restUsers).emit("userJoined" , socket.id);        
