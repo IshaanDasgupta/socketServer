@@ -121,7 +121,7 @@ io.on('connection' , (socket) => {
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
         console.log("rest users ", restUsers);
         console.log("--------------------------------------------");
-        if (restUsers){
+        if (restUsers.length > 0){
             socket.emit("allUsers" , restUsers);
             socket.to(restUsers).emit("userJoined" , socket.id);        
         }
