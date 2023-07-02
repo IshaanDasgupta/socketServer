@@ -94,49 +94,25 @@ io.on('connection' , (socket) => {
     socket.on('disconnect' , () => {
         activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
         const roomID = socketToRoom[socket.id];
-        console.log("dcing " , socket.id);
-        console.log("before dc room " ,rooms[roomID]);
         let room = rooms[roomID];
         if (room){
-            console.log("room before filter " , room);
             room = room.filter((id) => id !== socket.id);
-            console.log("room after filter " , room);
             rooms[roomID] = room;
         }
-        console.log("after dc room " ,rooms[roomID]);
-        console.log("--------------------------------------------");
     })
     
     socket.on('joinRoom' , (roomId) => {
-        console.log(socket.id , "  joined room  :" , roomId);
-        console.log("room before joining " , rooms[roomId]);
         if (rooms[roomId]){
             rooms[roomId].push(socket.id);
         }
         else{
             rooms[roomId] = [socket.id];
         }
-        console.log("room after joining " , rooms[roomId]);
         socketToRoom[socket.id] = roomId;
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
-        console.log("rest users ", restUsers);
-        console.log("--------------------------------------------");
         if (restUsers){
-            socket.emit("allUsers" , restUsers);
-            socket.to(restUsers).emit("userJoined" , socket.id);        
+            socket.to(socket.id).emit("restUsersInRoom" , restUsers);
         }
-    })
-
-    socket.on('offer' ,  payload => {
-        io.to(payload.target).emit('userJoined' , payload);
-    })
-
-    socket.on('answer' , payload => {
-        io.to(payload.target).emit('answer' , payload);
-    })
-
-    socket.on("ice-candidate" , incoming => {
-        io.to(incoming.target).emit('ice-candidate' , incoming.candidate);
     })
 })
 
