@@ -111,7 +111,7 @@ io.on('connection' , (socket) => {
         socketToRoom[socket.id] = roomId;
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
         if (restUsers){
-            socket.to(socket.id).emit("restUsersInRoom" , restUsers);
+            socket.emit("restUsersInRoom" , restUsers);
         }
     })
 })
