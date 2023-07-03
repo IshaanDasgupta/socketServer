@@ -99,6 +99,7 @@ io.on('connection' , (socket) => {
             room = room.filter((id) => id !== socket.id);
             rooms[roomID] = room;
         }
+        socket.emit("userLeft" , socket.id);
     })
     
     socket.on('joinRoom' , (roomId) => {
