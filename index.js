@@ -101,6 +101,10 @@ io.on('connection' , (socket) => {
         }
         socket.broadcast.emit("userLeft" , socket.id);
     })
+
+    socket.on('forceDisconnect' , (socketID) => {
+        console.log("force DC  " , socketID);
+    })
     
     socket.on('joinRoom' , (roomId) => {
         if (rooms[roomId]){
