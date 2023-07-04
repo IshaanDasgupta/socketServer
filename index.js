@@ -115,10 +115,17 @@ io.on('connection' , (socket) => {
             rooms[roomId] = [socket.id];
         }
         socketToRoom[socket.id] = roomId;
+
+        socket.join(roomId);
+
         const restUsers = rooms[roomId].filter((id) => id !== socket.id);
         if (restUsers){
             socket.emit("restUsersInRoom" , restUsers);
         }
+    })
+
+    socket.on("sendMessageInRoom" , (messageDetails) => {
+        socket.to(roomID).emit("messageRecievedInRoom" , messageDetails);
     })
 })
 
