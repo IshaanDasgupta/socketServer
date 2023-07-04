@@ -125,7 +125,7 @@ io.on('connection' , (socket) => {
     })
 
     socket.on("sendMessageInRoom" , (messageDetails) => {
-        socket.to(roomID).emit("messageRecievedInRoom" , messageDetails);
+        socket.to(messageDetails.roomID).emit("messageRecievedInRoom" , messageDetails);
     })
 })
 
