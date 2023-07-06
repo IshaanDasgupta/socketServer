@@ -103,7 +103,6 @@ io.on('connection' , (socket) => {
     })
 
     socket.on('forceDisconnect' , (socketID) => {
-        console.log("force DC  " , socketID);
         socket.disconnect();
     })
     
