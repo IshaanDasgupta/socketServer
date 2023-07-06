@@ -130,7 +130,7 @@ io.on('connection' , (socket) => {
         const restUsers = rooms[roomID].filter((obj) => obj.socketID !== socket.id);
         if (restUsers){
             socket.emit("restUsersInRoom" , restUsers);
-            socket.emit("roomDetails" , {roomName:roomDetails[roomID].roomName , roomName:roomTimestamp[roomID].roomTimestamp});
+            socket.emit("roomDetails" , {roomName:roomDetails[roomID].roomName , roomName:roomDetails[roomID].roomTimestamp});
         }
     })
 
