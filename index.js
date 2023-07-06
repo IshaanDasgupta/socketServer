@@ -110,6 +110,7 @@ io.on('connection' , (socket) => {
 
     socket.on('createRoom' , (payload) => {
         const {roomID , roomName , roomTimestamp} = payload;
+        rooomDetails[roomID] = {};
         roomDetails[roomID].roomName = roomName;
         roomDetails[roomID].roomTimestamp = roomTimestamp;
     })
