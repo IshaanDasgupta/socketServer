@@ -64,6 +64,7 @@ const io = require('socket.io')(server , {
 let activeUsers = [];
 const rooms = {};
 const socketToRoom = {};
+const roomDetails = {};
 
 io.on('connection' , (socket) => {    
     socket.on('addUser' , (userId) => {
@@ -106,6 +107,12 @@ io.on('connection' , (socket) => {
     socket.on('forceDisconnect' , (socketID) => {
         socket.disconnect();
     })
+
+    socket.on('createRoom' , (payload) => {
+        const {roomID , roomName , roomTimestamp} = payload;
+        roomDetails[roomID].roomName = roomName;
+        roomDetails[roomID].roomTimestamp = roomTimestamp;
+    })
     
     socket.on('joinRoom' , (payload) => {
         const {roomID , userMongoID } = payload;
@@ -122,6 +129,7 @@ io.on('connection' , (socket) => {
         const restUsers = rooms[roomID].filter((obj) => obj.socketID !== socket.id);
         if (restUsers){
             socket.emit("restUsersInRoom" , restUsers);
+            socket.emit("roomDetails" , {roomName:roomDetails[roomID].roomName , roomName:roomTimestamp[roomID].roomTimestamp});
         }
     })
 
