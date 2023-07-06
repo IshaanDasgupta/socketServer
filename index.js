@@ -96,8 +96,9 @@ io.on('connection' , (socket) => {
         activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
         const roomID = socketToRoom[socket.id];
         let room = rooms[roomID];
-        const userDetails = room.find((obj) => obj.socketID === socket.id);
+        let userDetails = {};
         if (room){
+            userDetails = room.find((obj) => obj.socketID === socket.id);
             room = room.filter((obj) => obj.socketID !== socket.id);
             rooms[roomID] = room;
         }
@@ -124,7 +125,6 @@ io.on('connection' , (socket) => {
             rooms[roomID] = [{socketID : socket.id , mongoID:userMongoID}];
         }
         socketToRoom[socket.id] = roomID;
-
         socket.join(roomID);
 
         const restUsers = rooms[roomID].filter((obj) => obj.socketID !== socket.id);
