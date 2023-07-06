@@ -127,5 +127,10 @@ io.on('connection' , (socket) => {
     socket.on("sendMessageInRoom" , (messageDetails) => {
         socket.to(messageDetails.roomID).emit("messageRecievedInRoom" , messageDetails);
     })
+
+    socket.on("sendingMongoID" , (details) => {
+        const {targetSocketID , senderMongoID}= details;
+        socket.to(targetSocketID).emit("receivingMongoID" , senderMongoID);
+    })
 })
 
