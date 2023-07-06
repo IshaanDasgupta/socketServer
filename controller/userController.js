@@ -23,7 +23,7 @@ const loginUser = async ( req, res,next)=>{
             return next(createError(400, "incorrect email or password"));
         }
         
-        const isPasswordCorrect = await bcryptjs.compare(req.body.password,user.password);
+        const isPasswordCorrect = bcryptjs.compare(req.body.password,user.password);
         if (!isPasswordCorrect){
             return next(createError(400, "incorrect email or password"));
         }
@@ -45,7 +45,6 @@ const logoutUser = async (req,res,next)=>{
         next(err);
     }
 }
-
 
 
 const fetchUser = async(req , res , next) => {

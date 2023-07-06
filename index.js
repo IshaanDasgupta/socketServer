@@ -96,7 +96,7 @@ io.on('connection' , (socket) => {
         const roomID = socketToRoom[socket.id];
         let room = rooms[roomID];
         if (room){
-            room = room.filter((id) => id !== socket.id);
+            room = room.filter((obj) => obj.socketID !== socket.id);
             rooms[roomID] = room;
         }
         socket.broadcast.emit("userLeft" , socket.id);
@@ -106,18 +106,19 @@ io.on('connection' , (socket) => {
         socket.disconnect();
     })
     
-    socket.on('joinRoom' , (roomId) => {
-        if (rooms[roomId]){
-            rooms[roomId].push(socket.id);
+    socket.on('joinRoom' , (payload) => {
+        const {roomID , userMongoID } = payload;
+        if (rooms[roomID]){
+            rooms[roomID].push({socketID : socket.id , mongoID:userMongoID});
         }
         else{
-            rooms[roomId] = [socket.id];
+            rooms[roomID] = [{socketID : socket.id , mongoID:userMongoID}];
         }
-        socketToRoom[socket.id] = roomId;
+        socketToRoom[socket.id] = roomID;
 
-        socket.join(roomId);
+        socket.join(roomID);
 
-        const restUsers = rooms[roomId].filter((id) => id !== socket.id);
+        const restUsers = rooms[roomID].filter((obj) => obj.socketID !== socket.id);
         if (restUsers){
             socket.emit("restUsersInRoom" , restUsers);
         }
