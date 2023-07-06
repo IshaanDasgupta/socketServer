@@ -95,11 +95,12 @@ io.on('connection' , (socket) => {
         activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
         const roomID = socketToRoom[socket.id];
         let room = rooms[roomID];
+        const userDetails = room.find((obj) => obj.socketID === socket.id);
         if (room){
             room = room.filter((obj) => obj.socketID !== socket.id);
             rooms[roomID] = room;
         }
-        socket.broadcast.emit("userLeft" , socket.id);
+        socket.broadcast.emit("userLeft" , userDetails);
     })
 
     socket.on('forceDisconnect' , (socketID) => {
