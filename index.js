@@ -88,7 +88,7 @@ io.on('connection' , (socket) => {
         const {reciverID} = message;
         const user = activeUsers.find((user) => user.userId == reciverID);
         if (user){
-            io.to(user.socketId).emit('recieveMessage' ,  {chatID : message.chatID , senderID: message.senderID , text : message.text});
+            io.to(user.socketId).emit('recieveMessage' ,  {chatID : message.chatID , senderID: message.senderID , text : message.text , createdAt:message.createdAt});
         }
     })
 
