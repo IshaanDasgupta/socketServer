@@ -48,7 +48,7 @@ const logoutUser = async (req,res,next)=>{
 
 const fetchUserByEmail = async(req , res , next) => {
     try{
-        const user = await user.find({"email": req.body.email});
+        const user = await User.find({"email": req.body.email});
         res.status(200).send(user);
     }
     catch(err){
