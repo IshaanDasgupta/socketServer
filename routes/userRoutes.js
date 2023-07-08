@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/register' , registerUser);
 router.post('/login' , loginUser);
 router.post('/logout' , verifyToken , logoutUser);
-router.get('/fetchUserByEmail' , fetchUserByEmail);
+router.post('/fetchUserByEmail' , fetchUserByEmail);
 router.get('/:id' , fetchUser);
 router.get('/profile' , verifyToken , fetchProfile);
 router.put('/' , verifyToken , updateUser);
