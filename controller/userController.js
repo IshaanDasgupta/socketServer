@@ -46,6 +46,15 @@ const logoutUser = async (req,res,next)=>{
     }
 }
 
+const fetchUserByEmail = async(req , res , next) => {
+    try{
+        const user = await user.find({"email": req.body.email});
+        res.status(200).send(user);
+    }
+    catch(err){
+        next(err);
+    }
+}
 
 const fetchUser = async(req , res , next) => {
     try{
@@ -92,4 +101,4 @@ const deleteUser = async(req , res , next) => {
 }
 
 
-module.exports = {registerUser , loginUser , logoutUser , fetchUser , fetchProfile , updateUser , deleteUser};
+module.exports = {registerUser , loginUser , logoutUser , fetchUserByEmail , fetchUser , fetchProfile , updateUser , deleteUser};
